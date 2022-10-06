@@ -10,13 +10,13 @@
 
 stdenv.mkDerivation rec {
   pname = "obs-backgroundremoval";
-  version = "0.4.0";
+  version = "0.5.0"; # TODO: not an official version, but current main branch!
 
   src = fetchFromGitHub {
     owner = "royshil";
     repo = "obs-backgroundremoval";
-    rev = "v${version}";
-    sha256 = "sha256-TI1FlhE0+JL50gAZCSsI+g8savX8GRQkH3jYli/66hQ=";
+    rev = "cc9d4a5711f9388ed110230f9f793bb071577a23";
+    sha256 = "sha256-xkVZ4cB642p4DvZAPwI2EVhkfVl5lJhgOQobjNMqpec=";
   };
 
   nativeBuildInputs = [ cmake ];
@@ -25,11 +25,15 @@ stdenv.mkDerivation rec {
   dontWrapQtApps = true;
 
   cmakeFlags = [
-    "-DLIBOBS_INCLUDE_DIR=${obs-studio.src}/libobs"
     "-DOnnxruntime_INCLUDE_DIRS=${onnxruntime.dev}/include/onnxruntime/core/session"
   ];
 
-  patches = [ ./obs-backgroundremoval-includes.patch ];
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/royshil/obs-backgroundremoval/commit/9e1303923043c205a086d93692dbea8162d002fd.diff";
+      sha256 = "sha256-SwKjo5FJvcLq+CPuxsPIhZ3OBVf3KTVaYzd023hBsPU=";
+    })
+  ];
 
   prePatch = ''
     sed -i 's/version_from_git()/set(VERSION "${version}")/' CMakeLists.txt

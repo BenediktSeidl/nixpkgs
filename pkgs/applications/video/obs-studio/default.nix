@@ -46,13 +46,13 @@ let
 in
 mkDerivation rec {
   pname = "obs-studio";
-  version = "27.2.4";
+  version = "28.0.3";
 
   src = fetchFromGitHub {
     owner = "obsproject";
     repo = "obs-studio";
     rev = version;
-    sha256 = "sha256-OiSejQovSmhItrnrQlcVp9PCDRgAhuxTinSpXbH8bo0=";
+    sha256 = "sha256-+4H1BjEgxqkAEvRyr2Tg3wXutnMvlYQEdT5jz644fMA=";
     fetchSubmodules = true;
   };
 
@@ -113,6 +113,9 @@ mkDerivation rec {
   cmakeFlags = [
     "-DCMAKE_CXX_FLAGS=-DDL_OPENGL=\\\"$(out)/lib/libobs-opengl.so\\\""
     "-DOBS_VERSION_OVERRIDE=${version}"
+    # TODO: next two lines only to get it running, should be removed
+    "-DENABLE_AJA=OFF " #>   OBS: SRT and RIST libraries not found! Please install SRT and RIST
+    "-DENABLE_NEW_MPEGTS_OUTPUT=OFF" #>   libraries or set ENABLE_NEW_MPEGTS_OUTPUT=OFF.
     "-Wno-dev" # kill dev warnings that are useless for packaging
     # Add support for browser source
     "-DBUILD_BROWSER=ON"
